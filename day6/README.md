@@ -1,23 +1,38 @@
 # Day 6 Containerization
 
+## Welcome
+
+This day is about getting you started with containers. We will touch the following topics:
+
+- Docker
+- Container Basics
+- Docker Objects
+- Container Images and Registries
+- Azure Container Services (like Azure Container Registry and have a first glance at the AZure Kubernetes Service)
+
+## Challenges
+
+- [Challenge 0: Prerequisites](./challenges/challenge0.md) (~20 min)
+- [Challenge 1: Docker 101](./challenges/challenge1.md) (~30 min)
+- [Challenge 2: Container 101](./challenges/challenge2.md) (~30 min)
+- [Challenge 3: Docker Objects](./challenges/challenge3.md) (~30 min)
+- [Challenge 4: Image and Registry](./challenges/challenge4.md) (~30 min)
+- [Challenge 5: Azure Container Services](./challenges/challenge5.md) (~30 min)
+- [Challenge 6: Self-learning](./challenges/challenge6.md)
+
 ## Goal
 
-The main goal of the Day 6 is basically building Linux Container and Docker knowledge. Day will start with fundamentals and skill building part will continue step by step. By the end of the day, all developers will be able to build Docker images and have all the information related to running them on production systems.
+The main goal of the Day 6 is basically building _Linux Container_ and _Docker_ knowledge. The day will gradually guide you from the fundamentals to how to build Docker images.
 
----
+At the end of the day you will have all the information related to running containers on production systems.
 
-## Agenda and Syllabus
+### Detailed Agenda
 
-**[Challenge 0: Prerequisites](./challenges/challenge0.md)**
+To reach today's goal we have split the schedule into several info slots that guide through the different topics. Each info slot is accompanied by a corresponding challenge that gives you the opportunity to get hands-on experience on the different topics. 
 
-- Docker hub id and repo creation
-- Docker Desktop for Mac
-- Docker Desktop for Windows or Vm
-- Azure Installation
-  - Vscode and Extensions installation
-  - GitHub Repo clone
+Here you find a list of the different info slots and what to expect from them:
 
-**Info Slot 1: Docker 101**
+#### Info Slot 1: Docker 101
 
 - What is Docker?
   - Linux Container Concept (LXC, Kernel, Namespaces, Cgroups)
@@ -33,18 +48,7 @@ The main goal of the Day 6 is basically building Linux Container and Docker know
   - Detach, Active, Task Containers
   - Exec (Executing commands inside Containers)
 
-**[Challenge 1: Docker 101](./challenges/challenge1.md)**
-
-- First let's check the current status of the Docker.
-- It's time to get more information about our Docker installation.
-- Let's see "How to become a Docker Cli master?"
-- It's time to run our first container
-- Detach container
-- Running another application inside the container
-- Connect to a Docker container
-- Inspecting a container's details
-
-**Info Slot 2: Container 101**
+#### Info Slot 2: Container 101
 
 - Docker Container Basics
   - Theory (one app one container)
@@ -56,31 +60,13 @@ The main goal of the Day 6 is basically building Linux Container and Docker know
   - Consumption Limits
   - Environment Variables
 
-**[Challenge 2: Container 101](./challenges/challenge2.md)**
-
-- First let's create couple of containers
-- Docker logs
-- Docker top and stats
-- CPU and Memory consumption limits
-- Environment Variables
-
-**Info Slot 3: Docker Objects**
+#### Info Slot 3: Docker Objects
 
 - Batteries included but removable
 - Docker Volume (Volume drivers, Bind Mounts)
 - Docker Network (basics, drivers, port publish)
 
-**[Challenge 3: Docker Objects](./challenges/challenge3.md)**
-
-- Creating the first volume
-- Other volume options
-- Default networks - Bridge
-- Default networks - Host
-- Default networks - None
-- User-defined bridge network
-- Port publishing
-
-**Info Slot 4: Image and Registry**
+#### Info Slot 4: Image and Registry
 
 - Image Basics
   - Image naming scheme and tags
@@ -99,16 +85,7 @@ The main goal of the Day 6 is basically building Linux Container and Docker know
   - Build ARG
   - Docker Commit - Docker save/load
 
-**[Challenge 4: Image and Registry](./challenges/challenge4.md)**
-
-- Tagging
-- Building the first image
-- Building a nodejs image
-- Multi-stage build
-- Php contacts app
-- Docker commit
-
-**Info Slot 5: Azure Container Services**
+#### Info Slot 5: Azure Container Services
 
 - Container Services on Azure
   - Container Instances
@@ -118,46 +95,3 @@ The main goal of the Day 6 is basically building Linux Container and Docker know
   - Azure Red Hat OpenShift
   - Azure Container Registry (ACR)
   - Azure Kubernetes Service (AKS)
-
-**[Challenge 5: Azure Container Services](./challenges/challenge5.md)**
-
-- Azure Container Registry
-- Azure Kubernetes Service
-- Deploy php app to AKS
-- Clean-up
-
-**[Challenge 6: Self-learning](./challenges/challenge6.md)**
-
-- Reading list (Home-work)
-
----
-
-[Challenge 0]
-
-09:00 - 09:45 [Info Slot 1] 45 min
-
-09:45 - 10:15 [Challenge Slot 1] 30 min
-
-10:15 - 10:30 [Break] 15 min
-
-10:30 - 11:30 [Info Slot 2] 60 min
-
-11:30 - 12:00 [Challenge Slot 2] 30 min
-
-12:00 - 13:00 [Lunch Break] 60 min
-
-13:00 - 13:45 [Info Slot 3] 45 min
-
-13:45 - 14:15 [Challenge Slot 3] 30 min
-
-14:15 - 14:30 [Break] 15 Min
-
-14:30 - 15:30 [Info Slot 4] 60 min
-
-15:30 - 16:00 [Challenge Slot 4] 30 min
-
-16:00 - 16:30 [Info Slot 5] 30 min
-
-16:30 - 17:00 [Challenge Slot 5] 30 min
-
-[Challenge 6]

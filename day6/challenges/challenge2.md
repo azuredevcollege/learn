@@ -1,41 +1,62 @@
 # Challenge 2: Container 101
 
-## Here is what you'll learn
-- Checking container logs
-- Listing running processes inside container
-- Checking container's resource usage
-- Limiting container's cpu and memory usage
-- Setting environment variables
+⏲️ *Est. time to complete: 30 min.* ⏲️
 
-In this challenge, we're gonna go a little bit deeper and learn how to use native Docker commands to play with containers without connecting them. 
+## Here is what you'll learn 🎯
 
-## Exercises
+In this challenge, we go a little bit deeper and learn how to use native Docker commands to play with containers without connecting them.
 
+In this challenge you will:
 
-**1: First let's create a couple of containers**
-<details>
-  <summary>Click to expand!</summary>
+- Check container logs
+- List running processes inside container
+- Check container's resource usage
+- Limit container's CPU and memory usage
+- Set environment variables
 
-Open your terminal and type: 
+## Table Of Contents
+
+1. [Starting Point - Create Containers](#starting-point-create-containers)
+2. [Docker Logs](#docker-logs)
+3. [Docker top and stats](#docker-top-and-stats)
+4. [CPU and Memory Consumption Limits](#cpu-and-memory-consumption-limits)
+5. [Environment Variables](#environment-variables)
+6. [Wrap-Up](#wrap-up)
+
+## Starting Point - Create Containers
+
+First let's create a couple of containers. Open your terminal and type:
+
 ```shell
-$ docker container run -d --name con1 -p 80:80 nginx 
+docker container run -d --name con1 -p 80:80 nginx 
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 501ff8e64847a6ac9510761f42a3c1ebe2aee20f0e3e78752d04056eb941a8c1
  ```
 
-We have created a container called ```con1``` with ```-d``` option from the image ```nginx:latest```. As you remember, -d means run it in background. Nginx is an open source reverse proxy-webserver daemon. When you create a container from that image, nginx webserver daemon runs and starts to listen on tcp port 80. Nginx is a service, not one time application, so when it starts, it continues to run. Hence, container is up and running too. With ```-p 80:80``` option, we instructed to Docker that we want to forward host's TCP 80 port to container's TCP 80 port. Any request that reaches to host's 80 port will be forwarded to the container. If you open a web browser on the host and type ```http://127.0.0.1```, you'll access to the website running inside this container. We'll come to network details later.
+We have created a container called ```con1``` with ```-d``` option from the image ```nginx:latest```. As you remember, ```-d``` means run it in background.
 
-<img src="./img/nginx.png">
+_Nginx_ is an open source reverse proxy-webserver daemon. When you create a container from that image, the nginx webserver daemon runs and starts to listen on tcp port 80. Nginx is a service, not a one time application, so when it starts, it continues to run. Hence, container is up and running too.
 
- Now let's keep this container as is and create another one. This time we're gonna create a task container. One time application will start when container will start, it will do its own thing and close, so the container will close too. We're gonna run this container detached too. 
+With ```-p 80:80``` option, we instructed to Docker that we want to forward host's TCP 80 port to container's TCP 80 port.
 
-Type: 
+Any request that reaches to the host's 80 port will be forwarded to the container. If you open a web browser on the host and type ```http://127.0.0.1```, you'll access the website running inside the container. We'll come to network details later.
+
+![NGNINX](./images/nginx.png)
+
+ Now let's keep this container as is and create another one. This time we create a _task container_. A one time application will start when container will start, which means that it will do its thing and close after it has finished. Consequently the container will close too. We run this container detached.
+
+Type:
+
 ```shell
-$  docker run -d --name con2 chuanwen/cowsay
+docker run -d --name con2 chuanwen/cowsay
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 Unable to find image 'chuanwen/cowsay:latest' locally
 latest: Pulling from chuanwen/cowsay
@@ -50,34 +71,38 @@ Status: Downloaded newer image for chuanwen/cowsay:latest
 385b768034d531ca050b0334f359cc29cfa3077d479a143634fe23b1acf4c55e
  ```
 
-We've created 2 containers named ```con1``` and ```con2```. Con1 is still running but con2 is exited because the running process inside container done its job and exited. Let's check them.
+We've created two containers named ```con1``` and ```con2```. ```con1``` is still running but ```con2``` exited because the running process inside container has done its job and exited. Let's check them.
 
-Type: 
+Type:
+
 ```shell
-$  docker ps -a
+docker ps -a
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS                NAMES
 385b768034d5        chuanwen/cowsay     "/bin/sh -c '/usr/ga…"   11 hours ago        Exited (0) 1 hour ago                        con2
 501ff8e64847        nginx               "/docker-entrypoint.…"   11 hours ago        Up 1 hour               0.0.0.0:80->80/tcp   con1
  ```
 
-Don't delete these containers now, we need them on the next exercise. 
-</details>
+Don't delete the containers, we need them in the next exercise.
 
-***
-**2: Docker logs**
-<details>
-  <summary>Click to expand!</summary>
+## Docker Logs
 
-We've created 2 containers a few minutes ago. We've created them with ```-d``` option which allowed us to run them in the background. But therefore, we couldn't see any messages or logs generated by these containers. Now it's time to see what's going on. Let start with ```con2``` and the command that we will use is ```docker logs```
+We've created two containers a few minutes ago with the ```-d``` option which allowed us to run them in the background. Therefore, we couldn't see any messages or logs generated by these containers.
 
-Type: 
+Now it's time to see what's going on. Let start with ```con2```. The command that we will use is ```docker logs```
+
+Type:
+
 ```shell
-$  docker logs con2
+docker logs con2
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
  ________________________________________
 / No one so thoroughly appreciates the   \
@@ -93,13 +118,18 @@ Output will be something like:
                 ||     ||
  ```
 
- The cow said some wise things :) But, when did it say these? To learn that, we can use ```-t``` option, which also adds timestamps to each generated log line.
+ The cow said some wise things :)
 
- Type: 
+ But, when did it say these? To learn that, we use the ```-t``` option, which adds timestamps to each generated log line.
+
+ Type:
+
 ```shell
-$  docker logs -t con2
+docker logs -t con2
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 2020-06-03T00:46:16.592712600Z  ________________________________________
 2020-06-03T00:46:16.592752800Z / No one so thoroughly appreciates the   \
@@ -115,13 +145,16 @@ Output will be something like:
 2020-06-03T00:46:16.592773000Z                 ||     ||
  ```
 
-What if this was a long log and we just wanted to see last couple of lines instead of whole log output? We can use ```--tail``` option for that. 
+What if this was a long log and we just wanted to see last couple of lines instead of whole log output? We can use ```--tail``` option for that.
 
-Type: 
+Type:
+
 ```shell
-$  docker logs --tail 5 con2
+docker logs --tail 5 con2
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
         \   ^__^
          \  (oo)\_______
@@ -130,14 +163,18 @@ Output will be something like:
                 ||     ||
 ```
 
-Let's start playing with ```con1```. Con1 is a nginx web daemon and it's running at the moment. Sometimes you want to check the logs live, while things are happening. To be able to do that, we can use ```-f``` option. This allows us to attach to the log and follow it in real time. First; 
+Let's start playing with ```con1```. ```con1``` is a nginx web daemon and it's running.
 
+Sometimes you want to check the logs live, while things are happening. To do that, we use the ```-f``` option. It allows us to attach to the log and follow it in real time.
 
-Type: 
+Type:
+
 ```shell
-$  docker logs -f con1
+docker logs -f con1
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
 /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
@@ -152,108 +189,139 @@ Output will be something like:
 172.17.0.1 - - [03/Jun/2020:10:45:47 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36 Edg/84.0.522.50" "-"
 ```
 
-Now we're attached to the log. Open a browser and visit ```http://127.0.0.1``` and refresh the page couple of times. Then turn back to terminal and you'll see new logs generated. You can follow them in real time. You can cut the connection to the log by typing ```CTRL + C``` when you're done. 
-</details>
+Now we're attached to the log. Open a browser and visit ```http://127.0.0.1``` and refresh the page a couple of times. Turn back to terminal and you'll see new logs generated. You can follow them in real time.
 
-***
-**3: Docker top and stats**
-<details>
-  <summary>Click to expand!</summary>
+You can cut the connection to the log by typing ```CTRL + C``` when you're done.
 
-In this exercise, we'll take a look at ```docker stats``` and ```docker top``` commands. First let's get started with ```docker top```. This command allows us to check which processes are running in a container. It's equivilant of ```ps``` Linux command but you don't need connect to execute this. Instead of that you can get the same result with ```docker top```. Let's try it on ```con1```, which is still running. 
+## Docker top and stats
 
-Type: 
+In this exercise, we'll take a look at ```docker stats``` and ```docker top``` commands.
+
+First let's get started with ```docker top```. This command allows us to check which processes are running in a container. It's the equivalent to the ```ps``` Linux command.
+
+However, you don't need to connect to the container to execute it. Instead you can get the same result with ```docker top```. Let's try it on ```con1```, which is still running.
+
+Type:
+
 ```shell
-$  docker top con1
+docker top con1
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 PID                 USER                TIME                COMMAND
 2345                root                0:00                nginx: master process nginx -g daemon off;
 2404                101                 0:00                nginx: worker process
 ```
 
-But if you execute the same command for ```con2``` you're gonna get an error because ```con2``` is not up and running at the moment. 
+If you execute the same command for ```con2``` you get an error because ```con2``` is not up and running at the moment.
 
-Type: 
+Type:
+
 ```shell
-$  docker top con2
+docker top con2
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 Error response from daemon: Container 385b768034d531ca050b0334f359cc29cfa3077d479a143634fe23b1acf4c55e is not running
 ```
 
-That was the way how we can see running processes in the container. Now it's time to check container's resource usage. For that, we're gonna use ```docker stats``` command. If you type ```docker stats``` without any option, it'll start showing all the running containers' resource usage stats. But you can also just check single container's resource usage by adding container name or id to the command, something like ```docker stats con1```. Let's try that.  
+This way we can see running processes in the container. Now it's time to check container's resource usage.
 
-Type: 
+For that, we use the ```docker stats``` command. If you type ```docker stats``` without any option, it'll start showing all the running containers' resource usage statistics. You can also just check single container's resource usage by adding the container name or ID to the command, like ```docker stats con1```.
+
+Type:
+
 ```shell
-$  docker stats con1
+docker stats con1
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
 501ff8e64847        con1                0.00%               3.918MiB / 7.574GiB   0.05%               8.9kB / 5.27kB      0B / 0B             2
 ```
 
-```CTRL + C```  will allow you to turn back to terminal from this view. 
-</details>
+```CTRL + C```  will allow you to turn back to terminal from this view.
 
-***
-**4: CPU and Memory consumption limits**
-<details>
-  <summary>Click to expand!</summary>
+## CPU and Memory Consumption Limits
 
-It isn't wise to run any container on any production system without limiting its cpu and memory usage. If we don't limit container's memory and cpu usage, due to a faulty process or load, container may start using all the system resources of the host where it's running. This means that all the other containers and processes on that node would crash. Docker allows us to limit any container's memory and cpu usage. Memory part is relatively easy. You can specify maximum amount of ram that container can access. For example ```--memory=512M``` option dedicates 512 Megabyte of Ram. Memory option takes a positive integer, followed by a suffix of b, k, m, g, to indicate bytes, kilobytes, megabytes, or gigabytes. Also you can use ```--memory-swap``` option to set the amount of memory this container is allowed to swap to disk. Let's try to create a new container with restricted memory. 
+It will certainly lead to problems if you run any container on any production system without limiting its CPU and memory usage. Due to a faulty process or load, the container may start to use all the system resources of the host. This means that the other containers and processes on that host would crash.
 
-Type: 
+Docker allows us to limit any container's memory and CPU usage. You can specify maximum amount of memory that a container can access via the ```--memory``` option. ```--memory=512M``` dedicates 512 Megabyte of RAM to the container. The option takes a positive integer, followed by a suffix of b, k, m, g, to indicate bytes, kilobytes, megabytes, or gigabytes.
+
+You can also use ```--memory-swap``` option to set the amount of memory this container is allowed to swap to disk. Let's try to create a new container with restricted memory.
+
+Type:
+
 ```shell
-$  docker container run -d --memory=512M --name con3 nginx
+docker container run -d --memory=512M --name con3 nginx
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 9d9980bc1ba2dcbc72d30a1b62b4c69c9f0ba1c745a6ba7a098a1a9811068742
 ```
 
-You may use ```docker stats con3``` command to see that container started with limited memory. 
+Use ```docker stats con3``` command to see that container started with limited memory.
+![Con Memory](./images/conmemory.png)
 
-<img src="./img/conmemory.png">
+CPU limits are not the same as memory limits. You can't specify an "amount" of the CPU power. Instead of that, you can specify which CPU core the container can access or not. If you don't specify that, by default, any container can access all CPU cores of the host.
 
-As said, memory is relatively easy. Actually limiting the cpu is also easy but there isn't something like "just access to 200 Mhz of the CPU" :). Cpu limits are not the same as memory limits. You can't specify amount of the CPU power. Instead of that, you can only specify which cpu core that container can access or not. If you don't specify that, by default, any container can access to all cpu cores of the host. ```–cpus``` option allows us to limit maximum number of cores that container can access. For example, ```–cpus=“3”``` means that container can only access 3 cpu cores of the host. There is another option which is ```--cpuset-cpus=```. This allows us to restrict the container to specific cpu cores. For example, ```--cpuset-cpus=“1,3”```  means that container can only use core number 1 and core number 3 on that host. Let's try these and create 2 new containers with limited cpu.
+The ```–cpus``` option allows us to limit the maximum number of cores that container can access. For example, ```–cpus=“3”``` defines that the container can only access three CPU cores of the host.
 
-Type: 
+There is another option which is ```--cpuset-cpus=```. This option allows us to restrict the container to specific CPU cores. For example, ```--cpuset-cpus=“1,3”```  means that container can only use core number 1 and core number 3 on the host.
+
+Let's try these and create 2 new containers with limited CPU access.
+
+Type:
+
 ```shell
-$ docker container run -d --cpus="3" --name con4 nginx
+docker container run -d --cpus="3" --name con4 nginx
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 fba14e8a88ffa8f85ed904dd72901fd30da80bb9fe47bcac0ff4a4d44f385cfe
 ```
 
-Type: 
+Type:
+
 ```shell
-$ docker container run -d --cpuset-cpus="1,3" --name con5 nginx
+docker container run -d --cpuset-cpus="1,3" --name con5 nginx
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 2f1e7477a628c8ae3084166759987ead5456641451a03450cd7fcbcb1004afb9
 ```
-</details>
 
-***
-**5: Environment Variables**
-<details>
-  <summary>Click to expand!</summary>
+## Environment Variables
 
-> An environment variable is a dynamic-named value that can affect the way running processes will behave on a computer. They are part of the environment in which a process runs. For example, a running process can query the value of the TEMP environment variable to discover a suitable location to store temporary files, or the HOME or USERPROFILE variable to find the directory structure owned by the user running the process. *Wikipedia
+> **Definition**: An _environment variable_ is a dynamic-named value that can affect the way running processes will behave on a computer. They are part of the environment in which a process runs. For example, a running process can query the value of the TEMP environment variable to discover a suitable location to store temporary files, or the HOME or USERPROFILE variable to find the directory structure owned by the user running the process. *Wikipedia*
 
-Docker allows us to set environment variables in containers while creating them. There are 2 ways to set environment variables in a container. First one is ```--env``` option. Type ```--env``` and after that set the key=value. This creates the key as an environment variable and sets the value as its value. You can use multiple ```--env``` options to set multiple environment variables. But if you need to set long list of environment variables, you may create a file and put all the key=value pairs in it and use ```--env-file``` option to set all of these environment variables as bulk. It's now time to try that. First, we're gonna create a new container from ubuntu image. While doing that, we'll set couple of enviroment variables. And instead of the default application, we're gonna instruct to run ```printenv``` command and this will list all the enviroment variables of this container. 
+Docker allows us to set _environment variables_ in containers while creating them. There are two ways to do so:
 
-Type: 
+- The ```--env``` option: Type ```--env``` and after that set the ```key=value```. This creates the key as an environment variable and sets the value as its value. You can use multiple ```--env``` options to set multiple environment variables.
+- The ```--env-file``` option: Create a file and put all the key=value pairs in it and use ```--env-file``` to set all of these environment variables as bulk.
+
+It's now time to try that. First, we're gonna create a new container from ubuntu image. While doing that, we'll set couple of environment variables. And instead of the default application, we instruct to run the ```printenv``` command. This will list all the environment variables of the container.
+
+Type:
+
 ```shell
-$ docker container run --name env_test1  --env KEY1=value --env name=test --env database_server=test.contoso.com ubuntu printenv
+docker container run --name env_test1  --env KEY1=value --env name=test --env database_server=test.contoso.com ubuntu printenv
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 HOSTNAME=7d4d2c92c617
@@ -263,20 +331,26 @@ database_server=test.contoso.com
 HOME=/root
 ```
 
-We've created a new container named ```env_test``` and set 3 new enviroment variables. But instead of setting these one by one, we could create a file and put all the key=value pairs in it and use ```--env-file``` option to set all of these environment variables as bulk. Let's try that. First create a file named ```env.list``` and put these enviroment variables in it line by line and save the file.  
+We've created a new container named ```env_test``` and set three new environment variables. Instead of setting them one by one, we could create a file and put all the key=value pairs in it and use the ```--env-file``` option to set them as bulk.
+
+Let's try that. First create a file named ```env.list```, put these environment variables in it line by line and save the file.  
+
 ```shell
 KEY1=value
 name=test
 database_server=test.contoso.com
 ```
 
-Open the terminal and cd to folder where you saved this file. 
+Open the terminal and cd to folder where you saved this file.
 
-Type: 
+Type:
+
 ```shell
-$ docker container run --name env_test2  --env-file env.list ubuntu printenv
+docker container run --name env_test2  --env-file env.list ubuntu printenv
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 HOSTNAME=070f264ef277
@@ -285,13 +359,17 @@ name=test
 database_server=test.contoso.com
 HOME=/root
 ```
-Let's delete containers that have been created so far
 
-Type: 
+Let's delete the containers that have been created so far.
+
+Type:
+
 ```shell
-$ docker container rm -f con1 con2 con3 con4 con5 env_test1 env_test2
+docker container rm -f con1 con2 con3 con4 con5 env_test1 env_test2
 ```
-Output will be something like:
+
+The output will be something like:
+
 ```shell
 con1
 con2
@@ -301,11 +379,15 @@ con5
 env_test1
 env_test2
 ```
-</details>
 
-***
-## Wrap up
+## Wrap-up
 
-__Congratulations__ you have completed the Container 101 challenge and learned couple of very essential Docker commands.
+🎉 **_Congratulations_** 🎉
 
-*** Reference: https://docs.docker.com
+You have completed the Container 101 challenge and learned a couple of very essential Docker commands.
+
+:::details
+🔍 Reference: <https://docs.docker.com>
+:::
+
+[◀ Previous challenge](./challenge1.md) | [🔼 Day 6](../README.md) | [Next challenge ▶](./challenge3.md)
