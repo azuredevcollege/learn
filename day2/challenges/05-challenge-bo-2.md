@@ -179,6 +179,8 @@ Now open a command-line for the folder `Frontend`. Right-click on it and choose 
 
 ![vscode_integrated_terminal](./images/vscode_integrated_terminal.png 'vscode_integrated_terminal')
 
+Alternatively open a command-line and navigate to the `day2/apps/frontend/scmfe` folder inside the previously cloned repository.
+
 In the shell, run the following command:
 
 ```shell
