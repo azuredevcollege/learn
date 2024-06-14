@@ -274,6 +274,8 @@ want a manual approval, before a deployment is executed to that environment, we
 set _Environment protection rules_. Activate `Required reviewers` and add a
 reviewer.
 
+Select the Deployment branches dropdown and choose the Selected branches option. Add the master branch as allowed branch.
+
 :::tip
 
 📝 Add yourself as a Reviewer, otherwise you will have to wait until the
